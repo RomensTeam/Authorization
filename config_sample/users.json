@@ -1,0 +1,32 @@
+{
+    "users": {
+        "primary": {
+            "Login": {
+                "regexp": "^([a-zA-Z][a-zA-Z0-9]+)$",
+                "min": "5",
+                "max": "31"
+            }, 
+            "Pass": {
+                "min": "7",
+                "max": "31"
+            }
+        },
+        "secondary": {
+            "Email": {
+                "type":"email"
+            },
+            "Name": {
+                "type":"string",
+                "min": "5",
+                "max": "30"
+            }
+        },
+        "settings": {
+            "table":"remus_users",
+            "security": {
+                "salt":"UV3LQLJsTv",
+                "prefix":"remus"
+            }
+        }
+    }
+}
