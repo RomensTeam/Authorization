@@ -36,6 +36,8 @@ namespace RUsers;
       */
       public function __construct($PDO = NULL, $settings = null) {
           
+        @session_start();
+          
         if(is_null($settings)){
             $settings = DIR_SETTINGS.'users.json';
         }
@@ -126,6 +128,31 @@ namespace RUsers;
           if($user !== FALSE){
               return $this->SetProfile($user);
           }
+      }
+      
+      public function AutorizeByForm($array){
+          
+        $QB = new \QueryBuilder(self::$PDO);
+        $QB->select()
+           ->from(self::$settings['settings']['table']);
+        
+        foreach ($array as $key => $value) {
+            $keyt = strtolower($key);
+            if($keyt != 'pass'){
+                $QB->where(' `'.$key.'` = :'.$keyt);
+                $QB->bind(':'.$keyt, $value);
+            }
+        }
+        
+        $QB->limit(1);
+        $result = $QB->result();
+        $result = (array) array_shift($result);
+        if(!empty($result)){
+            $diff = (self::$security->PassToCode($array['pass']) == $result['Pass']);
+            if($diff){
+                return $this->autorizeByID($result['id']);
+            } else {return FALSE;}
+        }
       }
       
       /**
